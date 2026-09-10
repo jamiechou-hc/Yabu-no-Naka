@@ -1,375 +1,716 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>竹藪迷案｜學生調查端</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>竹林迷霧・三重證言</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-:root{
-  --ink:#272820;--paper:#f4ecd9;--paper2:#fffaf0;--bamboo:#314d39;--bamboo2:#56715b;
-  --red:#7d3030;--gold:#a5854a;--line:#cbbf9f;--shadow:#00000022;--mist:#e9eee8;
-}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{
-  margin:0;color:var(--ink);
-  font-family:"Noto Serif TC","Source Han Serif TC","PingFang TC","Microsoft JhengHei",serif;
-  background:
-    linear-gradient(rgba(242,237,223,.94),rgba(242,237,223,.94)),
-    repeating-linear-gradient(90deg,transparent 0 42px,#314d3915 43px 46px,transparent 47px 84px);
-}
-body:before,body:after{
-  content:"";position:fixed;top:0;bottom:0;width:22vw;max-width:180px;z-index:-1;opacity:.17;
-  background:repeating-linear-gradient(90deg,transparent 0 22px,var(--bamboo) 23px 29px,transparent 30px 48px);
-}
-body:before{left:0;transform:skewX(-2deg)}
-body:after{right:0;transform:skewX(2deg)}
-.app{max-width:820px;margin:auto;padding:14px 14px 60px}
-.cover,.sheet{
-  background:linear-gradient(135deg,#fffaf1,#f3ead3);
-  border:1px solid var(--line);box-shadow:0 10px 30px var(--shadow);
-  border-radius:16px;position:relative;overflow:hidden;
-}
-.cover{padding:28px 22px;text-align:center;margin:14px 0}
-.cover:before,.sheet:before{
-  content:"卷";position:absolute;right:14px;top:8px;font-size:72px;color:#7d30300d;font-weight:900;
-}
-h1,h2,h3{font-weight:800;letter-spacing:.04em}
-h1{font-size:clamp(2rem,8vw,3.3rem);margin:.15em;color:var(--bamboo)}
-h2{color:var(--bamboo);margin-top:0}
-h3{margin:.8em 0 .4em}
-.subtitle{color:#5f645d}
-.seal{
-  display:inline-block;border:2px solid var(--red);color:var(--red);padding:4px 9px;
-  transform:rotate(-2deg);font-weight:800;letter-spacing:.12em;margin-bottom:8px
-}
-.sheet{padding:20px;margin:14px 0}
-.hidden{display:none!important}
-.locked{filter:grayscale(.2);opacity:.72}
-.lockbox{
-  padding:26px 18px;text-align:center;border:1px dashed var(--line);border-radius:12px;background:#ffffff88
-}
-.row{display:flex;gap:10px;flex-wrap:wrap}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-input,textarea,select{
-  width:100%;padding:12px 13px;border:1px solid #b8ad91;border-radius:10px;background:#fffdfa;
-  font:inherit;color:var(--ink)
-}
-textarea{min-height:95px;resize:vertical}
-button{
-  border:0;border-radius:10px;padding:12px 16px;background:var(--bamboo);color:#fff;font:inherit;
-  font-weight:800;cursor:pointer;box-shadow:0 3px 0 #243a2b
-}
-button.secondary{background:#ede5d5;color:var(--ink);box-shadow:none;border:1px solid var(--line)}
-button.red{background:var(--red);box-shadow:0 3px 0 #5d2424}
-button:disabled{opacity:.45;cursor:not-allowed}
-.tag,.pill{
-  display:inline-block;border-radius:999px;padding:4px 9px;font-size:.86rem;background:#e8ede7;color:var(--bamboo);
-  margin:2px 4px 2px 0
-}
-.rolecard{
-  border:1px solid var(--gold);background:#fffaf0;border-radius:14px;padding:18px;position:relative
-}
-.rolecard:after{
-  content:"機密";position:absolute;right:12px;top:10px;color:#7d303055;border:1px solid #7d303055;padding:2px 6px;
-  transform:rotate(8deg);font-weight:800
-}
-.secret{background:#2f322c;color:#f8f2df;border-radius:12px;padding:15px;margin-top:12px}
-.quote,.evidence,.note{
-  background:#fffdfa;border-left:4px solid var(--gold);padding:13px 14px;margin:10px 0;border-radius:7px
-}
-.quote{border-left-color:var(--bamboo2)}
-.note{border-left-color:var(--red);background:#fff6ef}
-details summary{cursor:pointer;font-weight:800}
-.checkline{display:block;margin:8px 0;padding:7px 9px;background:#ffffff8c;border-radius:8px}
-.progress{position:sticky;top:0;z-index:9;background:#ebe3d3dd;backdrop-filter:blur(7px);padding:9px 12px;border-radius:0 0 12px 12px}
-.bar{height:7px;background:#d8cfb9;border-radius:999px;overflow:hidden}.bar>div{height:100%;background:var(--bamboo);width:0;transition:.3s}
-.status{display:flex;justify-content:space-between;font-size:.88rem;margin-bottom:5px;color:#5d625a}
-.feedback{padding:11px 12px;margin-top:10px;border-radius:9px;background:#e8f0e8;color:#26452e}
-.warn{background:#fff0df;color:#724719}
-.card{
-  background:#fffdfa;border:1px solid var(--line);border-radius:12px;padding:14px;cursor:pointer;
-  transition:.2s;min-height:110px
-}
-.card:hover,.card.open{transform:translateY(-1px);border-color:var(--bamboo2);box-shadow:0 5px 14px #00000010}
-.small{font-size:.9rem;color:#666b63}
-hr{border:0;border-top:1px dashed var(--line);margin:18px 0}
-.footer{text-align:center;color:#6a6e67;font-size:.86rem;padding:25px}
-@media(max-width:600px){.grid{grid-template-columns:1fr}.app{padding:10px}.sheet{padding:17px}.cover{padding:24px 16px}}
+  :root{
+    --bg-deep:#131f18;
+    --bg-panel:#1c2b21;
+    --bg-panel-2:#22331f;
+    --border-soft:#3a4d34;
+    --gold:#c69a4a;
+    --gold-dim:#8f7238;
+    --mist:#7f9776;
+    --parchment:#ece4d2;
+    --parchment-dim:#b9c2ac;
+    --blood:#7c3b34;
+    --blood-bright:#a8564c;
+    --shadow:0 10px 30px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(ellipse 900px 500px at 50% -10%, #1e2f22 0%, var(--bg-deep) 60%),
+      var(--bg-deep);
+    color:var(--parchment);
+    font-family:'Noto Sans TC', sans-serif;
+    min-height:100vh;
+    line-height:1.7;
+  }
+  .wrap{
+    max-width:760px;
+    margin:0 auto;
+    padding:28px 20px 100px;
+  }
+  header.top{
+    text-align:center;
+    margin-bottom:22px;
+  }
+  header.top .kicker{
+    color:var(--mist);
+    font-size:13px;
+    letter-spacing:.15em;
+  }
+  header.top h1{
+    font-family:'Noto Serif TC', serif;
+    font-weight:900;
+    font-size:clamp(28px,7vw,40px);
+    margin:6px 0 4px;
+    color:var(--parchment);
+  }
+  header.top p.sub{
+    color:var(--parchment-dim);
+    font-size:14px;
+    margin:0;
+  }
+
+  /* bamboo-joint tab bar */
+  nav.tabs{
+    display:flex;
+    overflow-x:auto;
+    gap:2px;
+    margin:26px 0 22px;
+    border-bottom:1px solid var(--border-soft);
+    scrollbar-width:none;
+  }
+  nav.tabs::-webkit-scrollbar{display:none;}
+  nav.tabs button{
+    flex:0 0 auto;
+    background:none;
+    border:none;
+    color:var(--parchment-dim);
+    font-family:'Noto Sans TC',sans-serif;
+    font-size:14px;
+    font-weight:500;
+    padding:10px 16px;
+    cursor:pointer;
+    border-bottom:2px solid transparent;
+    white-space:nowrap;
+    transition:color .2s, border-color .2s;
+  }
+  nav.tabs button:hover{color:var(--parchment);}
+  nav.tabs button.active{
+    color:var(--gold);
+    border-bottom-color:var(--gold);
+  }
+
+  section.panel{
+    display:none;
+    animation:reveal .5s ease;
+  }
+  section.panel.active{display:block;}
+  @keyframes reveal{
+    from{opacity:0; transform:translateY(6px);}
+    to{opacity:1; transform:translateY(0);}
+  }
+
+  .card{
+    background:var(--bg-panel);
+    border:1px solid var(--border-soft);
+    border-radius:6px;
+    padding:22px 22px 24px;
+    box-shadow:var(--shadow);
+    margin-bottom:16px;
+  }
+  .card h2{
+    font-family:'Noto Serif TC',serif;
+    font-size:20px;
+    margin:0 0 10px;
+    color:var(--parchment);
+  }
+  .card h3{
+    font-family:'Noto Serif TC',serif;
+    font-size:16px;
+    color:var(--gold);
+    margin:18px 0 8px;
+  }
+  .card p{color:var(--parchment-dim); font-size:14.5px; margin:6px 0;}
+  .card ul{color:var(--parchment-dim); font-size:14.5px; padding-left:20px; margin:8px 0;}
+  .card li{margin:4px 0;}
+
+  .role-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(130px,1fr));
+    gap:10px;
+    margin:16px 0 6px;
+  }
+  .role-btn{
+    background:var(--bg-panel-2);
+    border:1px solid var(--border-soft);
+    color:var(--parchment);
+    font-family:'Noto Sans TC',sans-serif;
+    font-weight:500;
+    padding:14px 10px;
+    border-radius:6px;
+    cursor:pointer;
+    text-align:center;
+    font-size:14px;
+    transition:border-color .2s, background .2s;
+  }
+  .role-btn .letter{
+    display:block;
+    font-family:'Noto Serif TC',serif;
+    font-size:22px;
+    color:var(--gold);
+    margin-bottom:4px;
+  }
+  .role-btn:hover{border-color:var(--gold-dim);}
+  .role-btn.selected{
+    background:linear-gradient(180deg,#2a3d24,#22331f);
+    border-color:var(--gold);
+  }
+
+  .seal{
+    display:inline-block;
+    font-family:'Noto Serif TC',serif;
+    font-size:12px;
+    color:var(--bg-deep);
+    background:var(--gold);
+    padding:2px 10px;
+    border-radius:2px;
+    letter-spacing:.1em;
+    margin-bottom:10px;
+  }
+
+  .clue-box{
+    border-left:3px solid var(--gold-dim);
+    padding:4px 0 4px 14px;
+    margin:14px 0;
+  }
+  .clue-box p{margin:6px 0;}
+
+  .locked{
+    border:1px dashed var(--border-soft);
+    border-radius:6px;
+    padding:16px;
+    margin-top:16px;
+    color:var(--parchment-dim);
+    font-size:14px;
+  }
+  .unlocked{
+    border:1px solid var(--gold-dim);
+    border-radius:6px;
+    padding:16px;
+    margin-top:16px;
+    background:rgba(198,154,74,.06);
+    animation:reveal .6s ease;
+  }
+  .unlock-row{
+    display:flex;
+    gap:8px;
+    margin-top:10px;
+    flex-wrap:wrap;
+  }
+  input[type=text], textarea{
+    background:var(--bg-deep);
+    border:1px solid var(--border-soft);
+    color:var(--parchment);
+    border-radius:5px;
+    padding:9px 12px;
+    font-family:'Noto Sans TC',sans-serif;
+    font-size:14px;
+    flex:1;
+    min-width:120px;
+  }
+  textarea{width:100%; resize:vertical; min-height:60px; margin-top:6px;}
+  button.action{
+    background:var(--gold);
+    color:#1a1108;
+    border:none;
+    font-family:'Noto Sans TC',sans-serif;
+    font-weight:700;
+    font-size:14px;
+    padding:9px 18px;
+    border-radius:5px;
+    cursor:pointer;
+    transition:filter .15s;
+  }
+  button.action:hover{filter:brightness(1.08);}
+  button.action.ghost{
+    background:none;
+    color:var(--gold);
+    border:1px solid var(--gold-dim);
+  }
+  .hint{color:var(--parchment-dim); font-size:12.5px; margin-top:6px;}
+  .msg{font-size:13px; margin-top:8px;}
+  .msg.err{color:var(--blood-bright);}
+  .msg.ok{color:#9cc98a;}
+
+  table.matrix{
+    width:100%;
+    border-collapse:collapse;
+    font-size:13px;
+    margin-top:10px;
+  }
+  table.matrix th, table.matrix td{
+    border:1px solid var(--border-soft);
+    padding:8px;
+    vertical-align:top;
+    text-align:left;
+  }
+  table.matrix th{
+    background:var(--bg-panel-2);
+    color:var(--gold);
+    font-family:'Noto Serif TC',serif;
+    font-weight:700;
+    font-size:13px;
+  }
+  table.matrix td.fixed{color:var(--parchment-dim); font-size:12.5px;}
+  table.matrix td textarea{min-height:50px; font-size:12.5px;}
+
+  .vote-options{display:flex; flex-direction:column; gap:8px; margin:12px 0;}
+  .vote-options label{
+    display:flex; align-items:center; gap:10px;
+    background:var(--bg-panel-2);
+    border:1px solid var(--border-soft);
+    border-radius:6px;
+    padding:10px 12px;
+    cursor:pointer;
+    font-size:14px;
+  }
+  .vote-options input{accent-color:var(--gold);}
+
+  /* teacher timer */
+  .timer-widget{
+    position:fixed;
+    bottom:16px; right:16px;
+    background:var(--bg-panel);
+    border:1px solid var(--gold-dim);
+    border-radius:8px;
+    padding:12px 16px;
+    box-shadow:var(--shadow);
+    font-family:'Noto Serif TC',serif;
+    z-index:50;
+    min-width:180px;
+  }
+  .timer-widget .tlabel{font-size:11px; color:var(--mist); font-family:'Noto Sans TC',sans-serif; letter-spacing:.08em;}
+  .timer-widget .tclock{font-size:26px; color:var(--gold); margin:2px 0;}
+  .timer-widget .tphase{font-size:12px; color:var(--parchment-dim); font-family:'Noto Sans TC',sans-serif;}
+  .timer-widget .tbtns{display:flex; gap:6px; margin-top:8px;}
+  .timer-widget button{
+    flex:1;
+    background:var(--bg-panel-2);
+    border:1px solid var(--border-soft);
+    color:var(--parchment);
+    font-family:'Noto Sans TC',sans-serif;
+    font-size:12px;
+    padding:5px;
+    border-radius:4px;
+    cursor:pointer;
+  }
+  .timer-widget button:hover{border-color:var(--gold-dim);}
+
+  .phase-list{list-style:none; padding:0; margin:10px 0 0; font-size:13px;}
+  .phase-list li{
+    display:flex; justify-content:space-between;
+    padding:6px 0;
+    border-bottom:1px solid var(--border-soft);
+    color:var(--parchment-dim);
+  }
+  .phase-list li.current{color:var(--gold); font-weight:700;}
+  .phase-list li span.t{color:var(--mist); font-size:12px;}
+
+  footer.note{
+    text-align:center;
+    color:var(--parchment-dim);
+    font-size:12px;
+    margin-top:40px;
+    opacity:.7;
+  }
+
+  @media (max-width:480px){
+    .timer-widget{left:12px; right:12px; bottom:12px; min-width:auto;}
+  }
 </style>
 </head>
 <body>
-<div class="app">
-  <section class="cover">
-    <div class="seal">山科特別調查</div>
-    <h1>竹藪迷案</h1>
-    <p class="subtitle">誰殺了武弘？——五人調查小組行動卷宗</p>
-    <div id="joinBox">
-      <input id="roomCode" placeholder="教師提供的房間代碼，例如 TAKE01" maxlength="12" style="margin-bottom:8px">
-      <input id="teamName" placeholder="小組名稱，例如 竹影偵查隊" maxlength="20">
-      <div class="row" style="justify-content:center;margin-top:12px">
-        <button onclick="joinRoom()">進入調查</button>
+
+<div class="wrap">
+  <header class="top">
+    <div class="kicker">RASHOMON CASE FILE ・ 山科竹林殺人事件</div>
+    <h1>竹林迷霧・三重證言</h1>
+    <p class="sub">改編自芥川龍之介〈竹藪中〉・課堂偵訊互動教材</p>
+  </header>
+
+  <nav class="tabs" id="tabs">
+    <button data-tab="intro" class="active">序・案情</button>
+    <button data-tab="role">選定角色</button>
+    <button data-tab="matrix">矛盾對照表</button>
+    <button data-tab="unlock">解鎖密令</button>
+    <button data-tab="vote">真相投票</button>
+    <button data-tab="teacher">教師主控</button>
+  </nav>
+
+  <!-- INTRO -->
+  <section class="panel active" id="tab-intro">
+    <div class="card">
+      <span class="seal">案情摘要</span>
+      <h2>山科竹林・武士金澤武弘 命案</h2>
+      <p>昨日晌午，若狹國武士金澤武弘與其妻真砂自關山啟程前往若狹，途經山科驛路，轉入後山竹林後失蹤。今晨，樵夫於竹林深處發現武弘屍體，一刀貫穿胸膛，現場僅遺留一條繩子與一把梳子。妻子真砂下落不明。強盜多襄丸已於粟田口落網。</p>
+      <p>你的小組即是本案的調查小組。五名組員將各自持有一份「唯一情報」——法庭上，證人只能開口陳述，不能把供詞遞給旁人看。你們必須靠彼此的敘述，拼湊出這座竹林裡真正發生的事。</p>
+      <h3>提醒</h3>
+      <ul>
+        <li>不要把手機畫面直接展示給隊友——用自己的話覆述</li>
+        <li>本案沒有官方公布的「正確答案」，你們要靠邏輯自己判斷</li>
+        <li>留意：每個敘述者的說法，是否恰好對他自己最有利？</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ROLE -->
+  <section class="panel" id="tab-role">
+    <div class="card">
+      <h2>選擇你的角色</h2>
+      <p>每組5人，各自選一個不同角色。只有你能看到自己的證詞，開始討論前先讀熟。</p>
+      <div class="role-grid" id="roleGrid"></div>
+      <div id="roleDetail"></div>
+    </div>
+  </section>
+
+  <!-- MATRIX -->
+  <section class="panel" id="tab-matrix">
+    <div class="card">
+      <h2>證詞矛盾對照表</h2>
+      <p>組員輪流口述後，把彼此提供的關鍵資訊填進去，最後一欄寫下小組的推理判斷。</p>
+      <div style="overflow-x:auto;">
+        <table class="matrix" id="matrixTable">
+          <thead>
+            <tr>
+              <th style="width:16%">關鍵問題</th>
+              <th style="width:16%">樵夫/行腳僧</th>
+              <th style="width:16%">多襄丸</th>
+              <th style="width:16%">真砂</th>
+              <th style="width:16%">武弘亡魂</th>
+              <th style="width:20%">小組判斷</th>
+            </tr>
+          </thead>
+          <tbody id="matrixBody"></tbody>
+        </table>
       </div>
-      <p class="small">同一組請共用一台手機或平板操作。</p>
+      <div class="unlock-row">
+        <button class="action ghost" id="exportMatrix">匯出矛盾表為文字</button>
+      </div>
+      <div id="matrixExport" class="msg"></div>
     </div>
-    <div id="joined" class="hidden"></div>
   </section>
 
-  <div id="progressWrap" class="progress hidden">
-    <div class="status"><span id="stageText">等待調查</span><span id="roomText"></span></div>
-    <div class="bar"><div id="bar"></div></div>
-  </div>
-
-  <section id="roles" class="sheet hidden">
-    <h2>調查員身分｜五人各司其職</h2>
-    <p>請依序點開五張身分卡，每位組員各認領一張。<b>秘密任務請只給本人看。</b></p>
-    <div id="roleCards" class="grid"></div>
-    <div class="note">五人並不是競爭關係。秘密任務的作用，是讓每個人用不同角度檢查同一份證詞。</div>
-  </section>
-
-  <section id="act1" class="sheet hidden">
-    <div class="seal">第一幕</div>
-    <h2>竹林命案｜重建現場</h2>
-    <p>你們抵達竹林。現在還不能判定兇手，只能整理：<b>我們究竟知道什麼？</b></p>
-    <div class="evidence"><b>現場摘要：</b>武弘胸口有單一傷口；附近發現繩子、梳子；草與竹葉有明顯踩踏；武弘原本攜帶的刀、弓、箭不在現場。</div>
-    <details class="quote"><summary>樵夫證詞</summary><p>我發現屍體時，現場只有繩子與梳子，周遭草葉被踐踏。</p></details>
-    <details class="quote"><summary>行腳僧證詞</summary><p>前一日晌午，我曾見武弘與真砂同行。武弘帶著刀、弓與約二十支箭。</p></details>
-    <details class="quote"><summary>捕吏證詞</summary><p>我逮捕多襄丸時，他身上帶著刀、弓、箭，旁邊還有一匹無鬃的茶紅色馬。</p></details>
-
-    <h3>任務：建立「最低限度事實」</h3>
-    <label class="checkline"><input type="checkbox" class="fact" value="dead"> 武弘已死亡</label>
-    <label class="checkline"><input type="checkbox" class="fact" value="tj"> 多襄丸一定殺了武弘</label>
-    <label class="checkline"><input type="checkbox" class="fact" value="rope"> 現場存在繩子與梳子</label>
-    <label class="checkline"><input type="checkbox" class="fact" value="duel"> 武弘曾和多襄丸公平決鬥</label>
-    <label class="checkline"><input type="checkbox" class="fact" value="missing"> 武弘原本攜帶的武器後來不在現場</label>
-    <div class="row"><button onclick="checkAct1()">確認判斷</button></div>
-    <div id="fb1"></div>
-  </section>
-
-  <section id="lock2" class="sheet hidden locked"><div class="lockbox"><h2>第二幕尚未解鎖</h2><p>請等待教師公布新的核心證詞。</p></div></section>
-  <section id="act2" class="sheet hidden">
-    <div class="seal">第二幕</div>
-    <h2>三份自白｜誰在改寫真相？</h2>
-    <div class="quote"><span class="pill">多襄丸</span><b>「是我殺了他。」</b><p>他聲稱自己解開武弘繩索，與之堂堂正正決鬥，在第二十三回合刺中對方胸口。</p></div>
-    <div class="quote"><span class="pill">真砂</span><b>「是我刺了丈夫。」</b><p>她聲稱多襄丸離開後，丈夫仍被綁著，以輕蔑眼神看她；她遂以小刀刺入武弘胸口。</p></div>
-    <div class="quote"><span class="pill">武弘亡魂</span><b>「我是自殺的。」</b><p>他聲稱真砂逃走、多襄丸離開後，自己以遺留的小刀刺入胸口。</p></div>
-
-    <h3>任務 A：找出不能同時成立的說法</h3>
-    <select id="contradiction">
-      <option value="">請選擇</option>
-      <option value="1">多襄丸：公平決鬥；真砂：武弘始終被綁著</option>
-      <option value="2">行腳僧：晌午看見夫妻；樵夫：早上發現屍體</option>
-      <option value="3">捕吏：馬在橋邊；行腳僧：女人曾騎馬</option>
-    </select>
-    <h3>任務 B：認罪也可能說謊嗎？</h3>
-    <textarea id="tajReason" placeholder="從自我形象、尊嚴、勇武、羞恥等角度思考。"></textarea>
-    <div class="row"><button onclick="checkAct2()">提交攻防</button></div>
-    <div id="fb2"></div>
-  </section>
-
-  <section id="lock3" class="sheet hidden locked"><div class="lockbox"><h2>第三幕尚未解鎖</h2><p>調查組正在等待新的物證。</p></div></section>
-  <section id="act3" class="sheet hidden">
-    <div class="seal">第三幕</div>
-    <h2>真相偵測器｜物證能救我們嗎？</h2>
-    <div class="grid">
-      <div class="card" onclick="flip(this)"><b>① 驗屍摘要</b><div class="hidden inner"><hr><p>胸部單一利器傷。僅依傷口，無法確定是他殺或自殺。</p></div></div>
-      <div class="card" onclick="flip(this)"><b>② 竹林現場</b><div class="hidden inner"><hr><p>草葉遭踐踏，可支持「現場有激烈動作」，不足以證明二十三回合決鬥。</p></div></div>
-      <div class="card" onclick="flip(this)"><b>③ 消失的小刀</b><div class="hidden inner"><hr><p>真砂與武弘都提到小刀；樵夫卻說現場只有繩子與梳子。</p></div></div>
-      <div class="card" onclick="flip(this)"><b>④ 武器流向</b><div class="hidden inner"><hr><p>多襄丸被捕時持有刀、弓、箭。這支持他接觸過武弘的物品，但不能單獨證明殺人。</p></div></div>
+  <!-- UNLOCK -->
+  <section class="panel" id="tab-unlock">
+    <div class="card">
+      <span class="seal">加密證詞</span>
+      <h2>解鎖密令</h2>
+      <p>老師會在課堂中宣布密令。輸入正確密令，可解鎖各角色證詞中被保留的關鍵細節。</p>
+      <div class="unlock-row">
+        <input type="text" id="unlockInput" placeholder="輸入老師公布的密令">
+        <button class="action" id="unlockBtn">解鎖</button>
+      </div>
+      <div id="unlockMsg" class="msg"></div>
+      <div id="unlockContent"></div>
     </div>
-    <h3>任務：哪個推論最合理？</h3>
-    <label class="checkline"><input type="radio" name="infer" value="a"> 多襄丸持有武弘物品，所以必定是兇手</label>
-    <label class="checkline"><input type="radio" name="infer" value="b"> 物證能限制某些說法，但仍不足以唯一重建死亡過程</label>
-    <label class="checkline"><input type="radio" name="infer" value="c"> 三人證詞不一致，就代表三人全部說謊</label>
-    <h3>小刀去哪裡了？</h3>
-    <textarea id="knifeTheory" placeholder="提出目前最合理的假說，也可以承認無法確定。"></textarea>
-    <div class="row"><button onclick="checkAct3()">完成調查</button></div>
-    <div id="fb3"></div>
   </section>
 
-  <section id="lock4" class="sheet hidden locked"><div class="lockbox"><h2>第四幕尚未解鎖</h2><p>請等待教師宣布進入最終審判。</p></div></section>
-  <section id="act4" class="sheet hidden">
-    <div class="seal">第四幕</div>
-    <h2>終極審判｜你們願意為哪個版本負責？</h2>
-    <select id="verdict">
-      <option value="">請選擇判決</option>
-      <option>A. 多襄丸殺害武弘</option>
-      <option>B. 真砂殺害武弘</option>
-      <option>C. 武弘自殺</option>
-      <option>D. 證據不足，無法判定</option>
-    </select>
-    <h3>三項支持證據</h3><textarea id="evidence3" placeholder="至少三點，建議分行。"></textarea>
-    <h3>兩項仍無法解釋的疑點</h3><textarea id="doubts2" placeholder="至少兩點，建議分行。"></textarea>
-    <div class="row"><button class="red" onclick="submitVerdict()">提交判決</button></div>
-    <div id="fb4"></div>
+  <!-- VOTE -->
+  <section class="panel" id="tab-vote">
+    <div class="card">
+      <h2>真相投票</h2>
+      <p>本案沒有標準答案——這個環節評分的是「說服力」，不是「猜對」。</p>
+      <h3>你們小組最採信誰的說法？</h3>
+      <div class="vote-options">
+        <label><input type="radio" name="vote" value="多襄丸"> 多襄丸——公平決鬥後殺死武弘，真砂在打鬥中逃走</label>
+        <label><input type="radio" name="vote" value="真砂"> 真砂——丈夫以眼神示意，她親手刺死丈夫後求死未果</label>
+        <label><input type="radio" name="vote" value="武弘"> 武弘亡魂——妻子教唆殺人未遂，武弘最終自己拔刀自盡</label>
+        <label><input type="radio" name="vote" value="都不可信"> 三者都不完全可信——真相已不可能還原</label>
+      </div>
+      <h3>推理依據（至少列出2個判斷理由）</h3>
+      <textarea id="voteReason" placeholder="例如：多襄丸沒有殺人動機隱瞞的理由，因為他已經認罪且求死，較無需要再美化自己……"></textarea>
+      <div class="unlock-row" style="margin-top:14px;">
+        <button class="action" id="voteSubmit">生成本組結論</button>
+      </div>
+      <div id="voteResult"></div>
+    </div>
   </section>
 
-  <section id="twist" class="sheet hidden">
-    <div class="seal">隱藏卷宗</div>
-    <h2>樵夫的沉默</h2>
-    <div class="note">武弘亡魂聲稱，死後有人靠近並拔走胸前小刀。可是最早發現屍體的樵夫，卻聲稱現場只有繩子與梳子。</div>
-    <p><b>最後問題：</b>為什麼我們一開始比較容易相信「看起來沒有利害關係的人」？</p>
-    <textarea id="reflection" placeholder="寫下小組最後的想法。"></textarea>
-    <div class="row"><button onclick="finishCase()">完成案件</button></div>
-    <div id="finalMsg"></div>
+  <!-- TEACHER -->
+  <section class="panel" id="tab-teacher">
+    <div class="card">
+      <span class="seal">主審法官視角</span>
+      <h2>100分鐘課堂計時</h2>
+      <p>建議由老師的裝置開啟本頁籤，投影在螢幕上讓全班看到目前進度與階段。</p>
+      <div class="unlock-row">
+        <button class="action" id="timerStart">開始 / 繼續</button>
+        <button class="action ghost" id="timerPause">暫停</button>
+        <button class="action ghost" id="timerReset">重設 100 分鐘</button>
+      </div>
+      <ul class="phase-list" id="phaseList"></ul>
+      <p class="hint">計時只在本裝置有效（純前端，無伺服器同步），適合投影當作全班共同的時鐘。</p>
+    </div>
   </section>
 
-  <section id="ending" class="cover hidden">
-    <div class="seal">結案</div>
-    <h2>你相信的，究竟是真相，還是一個比較能說服你的故事？</h2>
-    <p>〈竹藪中〉讓我們看到：人的敘事往往混合了記憶、立場、羞恥、慾望與自我辯護。</p>
-    <div class="row" style="justify-content:center"><button class="secondary" onclick="exportCase()">匯出小組紀錄</button></div>
-  </section>
-  <div class="footer">學生調查端｜回答暫存於本機瀏覽器；教師端只控制幕次解鎖。</div>
+  <footer class="note">竹林迷霧・三重證言 — 改編教學教材，原著：芥川龍之介〈竹藪中〉</footer>
 </div>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
-import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js";
+<div class="timer-widget" id="floatTimer" style="display:none;">
+  <div class="tlabel">課堂剩餘時間</div>
+  <div class="tclock" id="floatClock">100:00</div>
+  <div class="tphase" id="floatPhase">尚未開始</div>
+  <div class="tbtns">
+    <button id="floatToggle">開始</button>
+    <button id="floatHide">隱藏</button>
+  </div>
+</div>
 
-/* ===== 請把這段替換成你自己的 Firebase Web App 設定 ===== */
-const firebaseConfig = {
-  apiKey: "PASTE_YOUR_API_KEY",
-  authDomain: "PASTE_YOUR_PROJECT.firebaseapp.com",
-  databaseURL: "https://PASTE_YOUR_PROJECT-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "PASTE_YOUR_PROJECT",
-  storageBucket: "PASTE_YOUR_PROJECT.appspot.com",
-  messagingSenderId: "PASTE_YOUR_SENDER_ID",
-  appId: "PASTE_YOUR_APP_ID"
+<script>
+/* ---------- 資料：五角色與證詞 ---------- */
+const ROLES = {
+  A: {
+    name: "樵夫 ・ 行腳僧",
+    base: `
+      <div class="clue-box">
+        <p><b>樵夫：</b>今晨照常入後山砍杉樹，在離山科驛路四、五町的竹林深處發現屍體。死者仰天倒臥，一刀貫穿胸膛，血已凝固，一隻馬蠅緊叮傷口。現場只有一條繩子和一把梳子，並無佩刀或弓箭。周遭草地與竹葉有明顯踐踏痕跡，像是有人拚命掙扎過。那裡馬進不去，離馬走的路還隔著一片竹林。</p>
+      </div>
+      <div class="clue-box">
+        <p><b>行腳僧：</b>昨日晌午，在關山到山科的途中，見過死者與一名戴苧麻面紗、騎馬的女子同行。女子外衣紅褐色，內裡青色，馬是茶紅色、鬃毛被剃掉，約四尺四寸高。死者除佩刀外，還攜著弓箭，黑漆箭囊插著二十來支箭。</p>
+      </div>`,
+    lockedHint: "被保留的細節：現場踐踏痕跡的具體範圍與方向"
+  },
+  B: {
+    name: "捕吏 ・ 老媼",
+    base: `
+      <div class="clue-box">
+        <p><b>捕吏：</b>昨晚初更在粟田口石橋逮捕強盜多襄丸，他從馬上跌落呻吟。多襄丸身上的弓、黑漆箭囊、十七支鷹羽戰箭，與死者裝備吻合，馬也是同一匹沒有鬃毛的茶紅色馬。多襄丸是京城有名的好色強盜，去年秋天鳥部寺曾有婦人與女童被殺，疑似也是他所為。</p>
+      </div>
+      <div class="clue-box">
+        <p><b>老媼：</b>死者是女婿金澤武弘，26歲，若狹國武士，性情溫和，不太可能與人結怨。女兒真砂19歲，性情剛烈、不讓鬚眉，左眼角有痣，除武弘外從未有過其他男人。老媼認定多襄丸殺了女婿，也擔心女兒已遭不測。</p>
+      </div>`,
+    lockedHint: "被保留的細節：捕吏對多襄丸過去案底的完整描述"
+  },
+  C: {
+    name: "多襄丸（自白）",
+    base: `
+      <div class="clue-box">
+        <p>承認殺人。原本見女子容貌動心，只想搶人不想殺人，便以埋藏古物寶藏為由，誘騙夫婦進入竹林，先制服並綁住武弘，再帶真砂前來，強行占有了她。</p>
+        <p>事成後本無殺意，正欲離開，真砂卻突然扯住他的手臂，喊道：「你死或是我丈夫死，讓其中一個人死吧！」並說要嫁給活下來的人——多襄丸自稱因此才湧起殺意。</p>
+        <p>他解開武弘的繩子，讓對方持刀公平決鬥，二十三回合後，一刀刺穿武弘胸膛。事後回頭，真砂已不知去向，他搜尋竹林卻不見蹤影，便帶走大刀與弓箭離開。</p>
+      </div>`,
+    lockedHint: "被保留的細節：多襄丸對「二十三回合」決鬥過程的描述"
+  },
+  D: {
+    name: "真砂（清水寺懺悔）",
+    base: `
+      <div class="clue-box">
+        <p>被強盜凌辱後，看見被綁的丈夫用眼神表達「輕蔑」，而非憤怒或悲哀。真砂感到羞恥、悲哀、憤懣交織，昏厥後醒來，強盜已離去，只剩丈夫仍被綁著，眼神依然冷冽、蔑視。</p>
+        <p>她對丈夫說：「我已不能和您在一起，決心一死，但請您也死吧。」丈夫嘴被竹葉塞住無法言語，但真砂從口型判斷丈夫是在說「殺吧」。她便用掉落的小刀刺進丈夫胸口。</p>
+        <p>之後她多次嘗試自殺——舉刀刺頸、投池——卻都未死，獨自活到現在，充滿罪惡感與羞恥。</p>
+      </div>`,
+    lockedHint: "被保留的細節：真砂描述丈夫「輕蔑眼神」的具體用詞"
+  },
+  E: {
+    name: "武弘（亡魂・藉女巫之口）",
+    base: `
+      <div class="clue-box">
+        <p>多襄丸凌辱真砂後，坐下用言語安慰她，甚至提議：「不如做我妻子」。真砂出神抬頭，回答：「那麼，帶我到任何地方去吧！」</p>
+        <p>真砂被牽走時，忽然回頭指著被綁的武弘：「請殺掉那個人，只要他活著，我就不能和你在一起。」多襄丸聽聞後反而駭然，一腳將真砂踢倒，轉頭問武弘：「這女的要怎麼發落？殺，還是饒？」——武弘因這一問，反倒願意饒恕多襄丸。</p>
+        <p>真砂趁隙逃入竹林，多襄丸追出但沒抓住她。多襄丸割斷武弘身上一處繩索、帶走刀與弓箭後離去，臨走前自言自語：「這次輪到我逃啦！」武弘掙脫後，拿起真砂遺落的小刀，自己刺進胸膛而死，臨終感覺有人拔走了那把刀。</p>
+      </div>`,
+    lockedHint: "被保留的細節：武弘「原諒多襄丸」那一瞬間的心理描述"
+  }
 };
-/* ====================================================== */
 
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+let selectedRole = null;
 
-let state=JSON.parse(localStorage.getItem("takeYabuUpgraded")||'{"room":"","team":"","answers":{}}');
-let roomUnsub=null;
+function renderRoleGrid(){
+  const grid = document.getElementById('roleGrid');
+  grid.innerHTML = '';
+  Object.keys(ROLES).forEach(key=>{
+    const btn = document.createElement('button');
+    btn.className = 'role-btn';
+    btn.innerHTML = `<span class="letter">${key}</span>${ROLES[key].name}`;
+    btn.onclick = ()=>selectRole(key);
+    grid.appendChild(btn);
+  });
+}
 
-const roles=[
- {title:"主審官",icon:"⚖️",duty:"主持討論、要求所有判斷都附理由。",secret:"秘密任務：當組員太快下結論時，至少追問一次：『這是事實、證詞，還是推論？』"},
- {title:"時序官",icon:"⏳",duty:"整理事件先後，檢查時間線能否成立。",secret:"秘密任務：找出至少一個時間或事件順序上的不確定處，提醒大家不要自行補完。"},
- {title:"證物官",icon:"🔎",duty:"管理物證，區分物證能證明與不能證明的範圍。",secret:"秘密任務：至少一次否決『有這個物證＝故事一定如此』的推論。"},
- {title:"質疑官",icon:"❗",duty:"專門尋找互相衝突、不能同時成立的說法。",secret:"秘密任務：至少推翻一項全組原先以為很可靠的判斷。"},
- {title:"動機官",icon:"🧠",duty:"分析每個人為什麼可能這樣說。",secret:"秘密任務：找出至少兩個『即使承認犯罪，也可能仍在美化自己』的理由。"}
+function selectRole(key){
+  selectedRole = key;
+  document.querySelectorAll('.role-btn').forEach((b,i)=>{
+    b.classList.toggle('selected', Object.keys(ROLES)[i]===key);
+  });
+  const role = ROLES[key];
+  document.getElementById('roleDetail').innerHTML = `
+    <h3>你的角色：${role.name}</h3>
+    ${role.base}
+    <div class="locked" id="lockedNote">🔒 ${role.lockedHint}——請至「解鎖密令」頁籤輸入老師公布的密令</div>
+  `;
+}
+
+/* ---------- 矛盾對照表 ---------- */
+const MATRIX_ROWS = [
+  ["武弘是怎麼死的？","（只描述結果：一刀貫穿胸膛）","公平決鬥被多襄丸所殺","被真砂用小刀刺死","自己拔小刀自殺"],
+  ["真砂事後去了哪裡？","無資訊","打鬥時逃走，不知去向","多次自殺未果，獨自活著","逃入竹林，未被追上"],
+  ["現場為何沒有刀劍，只有繩子和梳子？","客觀描述現場如此","說自己帶走刀劍去變賣","未提及","刀被強盜搶走"],
+  ["真砂是否主動要求殺夫？","無資訊","是，主動說「選一個死」","未提及此事","是，且態度更決絕"],
+  ["哪一段敘述最可能是為了保護敘述者自己？","","","",""]
 ];
 
-function saveLocal(){localStorage.setItem("takeYabuUpgraded",JSON.stringify(state))}
-function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
-function normRoom(s){return s.trim().toUpperCase().replace(/[^A-Z0-9_-]/g,"").slice(0,12)}
-function show(id,yes=true){document.getElementById(id).classList.toggle("hidden",!yes)}
+function renderMatrix(){
+  const tbody = document.getElementById('matrixBody');
+  tbody.innerHTML = '';
+  MATRIX_ROWS.forEach((row,i)=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td class="fixed"><b>${row[0]}</b></td>
+      <td class="fixed">${row[1]}</td>
+      <td class="fixed">${row[2]}</td>
+      <td class="fixed">${row[3]}</td>
+      <td class="fixed">${row[4]}</td>
+      <td><textarea data-row="${i}" placeholder="小組討論後的判斷..."></textarea></td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
 
-window.joinRoom=async function(){
-  const room=normRoom(document.getElementById("roomCode").value);
-  const team=document.getElementById("teamName").value.trim();
-  if(!room||!team){alert("請輸入房間代碼與小組名稱。");return}
-  state.room=room;state.team=team;saveLocal();
-  show("joinBox",false);show("joined");show("progressWrap");show("roles");show("act1");
-  document.getElementById("joined").innerHTML=`房間 <b>${esc(room)}</b>｜調查小組：<b>${esc(team)}</b>`;
-  document.getElementById("roomText").textContent=room;
-  renderRoles();
-  watchStage(room);
-  try{
-    await set(ref(db,`rooms/${room}/teams/${safeKey(team)}`),{name:team,lastSeen:Date.now()});
-  }catch(e){console.warn(e)}
-}
-function safeKey(s){return s.replace(/[.#$/\[\]]/g,"_").slice(0,40)}
-function renderRoles(){
- const box=document.getElementById("roleCards");box.innerHTML="";
- roles.forEach((r,i)=>{
-   const d=document.createElement("div");d.className="rolecard";
-   d.innerHTML=`<h3>${r.icon} ${r.title}</h3><p>${r.duty}</p>
-   <button class="secondary" onclick="toggleSecret(${i})">查看秘密任務</button>
-   <div id="secret${i}" class="secret hidden">${r.secret}</div>`;
-   box.appendChild(d);
- });
-}
-window.toggleSecret=function(i){document.getElementById("secret"+i).classList.toggle("hidden")}
-function watchStage(room){
- if(roomUnsub)roomUnsub();
- roomUnsub=onValue(ref(db,`rooms/${room}/stage`),snap=>{
-   const stage=Number(snap.val()||1);applyStage(stage);
- },err=>{
-   console.error(err);document.getElementById("stageText").textContent="同步失敗，請檢查 Firebase 設定";
- });
-}
-function applyStage(stage){
- document.getElementById("stageText").textContent=`教師目前解鎖：第 ${stage} 幕`;
- document.getElementById("bar").style.width=(Math.min(stage,4)/4*100)+"%";
- [["act2","lock2",2],["act3","lock3",3],["act4","lock4",4]].forEach(([act,lock,n])=>{
-   show(lock,stage<n);show(act,stage>=n);
- });
- if(stage>=5)show("twist");
-}
-window.checkAct1=function(){
- const vals=[...document.querySelectorAll(".fact:checked")].map(x=>x.value);
- const ok=vals.includes("dead")&&vals.includes("rope")&&vals.includes("missing")&&!vals.includes("tj")&&!vals.includes("duel");
- const fb=document.getElementById("fb1");
- if(!ok){fb.innerHTML='<div class="feedback warn">再檢查：不要把「某人的說法」直接當成已證實事實。</div>';return}
- state.answers.act1=vals;saveLocal();fb.innerHTML='<div class="feedback">通過。你們已成功把事實與證詞分開。</div>';
-}
-window.checkAct2=function(){
- const c=document.getElementById("contradiction").value,r=document.getElementById("tajReason").value.trim();
- if(c!=="1"){document.getElementById("fb2").innerHTML='<div class="feedback warn">這組說法不一定互相矛盾，請再比對死亡過程。</div>';return}
- if(r.length<12){document.getElementById("fb2").innerHTML='<div class="feedback warn">請補充：他可能如何維持自己的英雄形象？</div>';return}
- state.answers.act2={contradiction:c,tajReason:r};saveLocal();
- document.getElementById("fb2").innerHTML='<div class="feedback">很好。承認犯罪，不代表敘事就沒有自我美化。</div>';
-}
-window.flip=function(el){el.classList.toggle("open");el.querySelector(".inner").classList.toggle("hidden")}
-window.checkAct3=function(){
- const x=document.querySelector('input[name="infer"]:checked'),k=document.getElementById("knifeTheory").value.trim();
- if(!x){alert("請先選擇推論。");return}
- if(x.value!=="b"){document.getElementById("fb3").innerHTML='<div class="feedback warn">再想想：物證能證明「接觸過」與「一定殺人」是同一件事嗎？</div>';return}
- if(k.length<8){alert("請留下你們對小刀去向的假說。");return}
- state.answers.act3={infer:x.value,knifeTheory:k};saveLocal();
- document.getElementById("fb3").innerHTML='<div class="feedback">通過。物證能限制故事，卻未必能產生唯一故事。</div>';
-}
-window.submitVerdict=async function(){
- const v=document.getElementById("verdict").value,e=document.getElementById("evidence3").value.trim(),d=document.getElementById("doubts2").value.trim();
- if(!v||e.length<20||d.length<12){alert("請完成判決、三項支持證據與兩項疑點。");return}
- state.answers.act4={verdict:v,evidence:e,doubts:d};saveLocal();
- document.getElementById("fb4").innerHTML='<div class="feedback">判決已封存。等待教師開啟隱藏卷宗。</div>';
- try{
-   await set(ref(db,`rooms/${state.room}/verdicts/${safeKey(state.team)}`),{
-     team:state.team,verdict:v,evidence:e,doubts:d,submittedAt:Date.now()
-   });
- }catch(err){console.warn("判決上傳失敗",err)}
-}
-window.finishCase=function(){
- const r=document.getElementById("reflection").value.trim();if(r.length<12){alert("請留下最後反思。");return}
- state.answers.reflection=r;saveLocal();show("ending");
- document.getElementById("finalMsg").innerHTML='<div class="feedback">案件完成。沒有安心的唯一答案，正是這篇小說最重要的體驗之一。</div>';
- document.getElementById("ending").scrollIntoView({behavior:"smooth"});
-}
-window.exportCase=function(){
- const a=state.answers;
- const text=`《竹藪迷案》小組紀錄
-房間：${state.room}
-小組：${state.team}
+document.getElementById('exportMatrix').onclick = ()=>{
+  let out = "【竹林迷霧・矛盾對照表】\n\n";
+  document.querySelectorAll('#matrixBody textarea').forEach((ta,i)=>{
+    out += `Q${i+1}. ${MATRIX_ROWS[i][0]}\n小組判斷：${ta.value || "（未填寫）"}\n\n`;
+  });
+  navigator.clipboard?.writeText(out).catch(()=>{});
+  document.getElementById('matrixExport').innerHTML =
+    `<span class="ok">已產生文字版（並嘗試複製到剪貼簿）：</span><textarea readonly style="margin-top:8px;height:160px;">${out}</textarea>`;
+};
 
-【多襄丸可能不完全誠實的理由】
-${a.act2?.tajReason||""}
+/* ---------- 解鎖密令 ---------- */
+// 老師可自行修改這個密令；也可以改成每輪不同的密令陣列
+const UNLOCK_CODE = "山科";
 
-【小刀去向假說】
-${a.act3?.knifeTheory||""}
+document.getElementById('unlockBtn').onclick = ()=>{
+  const val = document.getElementById('unlockInput').value.trim();
+  const msg = document.getElementById('unlockMsg');
+  const content = document.getElementById('unlockContent');
+  if(val === UNLOCK_CODE){
+    msg.className = 'msg ok';
+    msg.textContent = '密令正確，加密證詞已解鎖。';
+    if(selectedRole){
+      content.innerHTML = `<div class="unlocked"><h3>解鎖內容：${ROLES[selectedRole].name}</h3><p>${ROLES[selectedRole].lockedHint}——請回到「選定角色」頁籤，向老師領取這段補充口述內容，並更新你對事件的判斷。</p></div>`;
+    } else {
+      content.innerHTML = `<div class="unlocked"><p>密令正確。請先到「選定角色」頁籤選擇你的角色，再回來查看你專屬的解鎖內容。</p></div>`;
+    }
+  } else {
+    msg.className = 'msg err';
+    msg.textContent = '密令不正確，請再詢問老師一次。';
+  }
+};
 
-【最終判決】
-${a.act4?.verdict||""}
+/* ---------- 真相投票 ---------- */
+document.getElementById('voteSubmit').onclick = ()=>{
+  const chosen = document.querySelector('input[name=vote]:checked');
+  const reason = document.getElementById('voteReason').value.trim();
+  const result = document.getElementById('voteResult');
+  if(!chosen || !reason){
+    result.innerHTML = `<p class="msg err">請先選擇一個版本，並填寫推理依據。</p>`;
+    return;
+  }
+  result.innerHTML = `
+    <div class="unlocked">
+      <h3>本組結論</h3>
+      <p><b>最採信版本：</b>${chosen.value}</p>
+      <p><b>推理依據：</b>${reason.replace(/\n/g,'<br>')}</p>
+      <p class="hint">請把這段結論唸給全班聽，或截圖交給老師。</p>
+    </div>`;
+};
 
-【支持證據】
-${a.act4?.evidence||""}
+/* ---------- 分頁切換 ---------- */
+document.querySelectorAll('#tabs button').forEach(btn=>{
+  btn.onclick = ()=>{
+    document.querySelectorAll('#tabs button').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
+    document.getElementById('floatTimer').style.display =
+      (btn.dataset.tab === 'teacher') ? 'block' : document.getElementById('floatTimer').dataset.forced === '1' ? 'block' : 'none';
+  };
+});
 
-【未解疑點】
-${a.act4?.doubts||""}
+/* ---------- 教師計時器（100分鐘課堂流程） ---------- */
+const PHASES = [
+  {t:0,   label:"情境代入・案情宣布"},
+  {t:5,   label:"個人線索閱讀"},
+  {t:15,  label:"組內輪流陳述"},
+  {t:30,  label:"第一輪推理・找矛盾點"},
+  {t:45,  label:"下課・老師發布解鎖密令"},
+  {t:55,  label:"解鎖與補完線索"},
+  {t:65,  label:"深度矛盾分析"},
+  {t:85,  label:"真相投票與答辯"},
+  {t:95,  label:"核心意涵揭示與總結"},
+  {t:100, label:"下課"}
+];
 
-【最後反思】
-${a.reflection||""}`;
- const blob=new Blob([text],{type:"text/plain;charset=utf-8"}),url=URL.createObjectURL(blob),x=document.createElement("a");
- x.href=url;x.download=`竹藪迷案_${state.team}.txt`;x.click();URL.revokeObjectURL(url);
+let totalSeconds = 100*60;
+let remaining = totalSeconds;
+let timerInterval = null;
+
+function fmt(sec){
+  const m = Math.floor(sec/60);
+  const s = sec%60;
+  return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
 }
-if(state.room&&state.team){
- document.getElementById("roomCode").value=state.room;document.getElementById("teamName").value=state.team;
- window.joinRoom();
+
+function currentPhase(){
+  const elapsedMin = (totalSeconds - remaining)/60;
+  let cur = PHASES[0];
+  for(const p of PHASES){ if(elapsedMin >= p.t) cur = p; }
+  return cur;
 }
+
+function renderPhaseList(){
+  const ul = document.getElementById('phaseList');
+  const cur = currentPhase();
+  ul.innerHTML = '';
+  PHASES.forEach(p=>{
+    const li = document.createElement('li');
+    li.className = (p===cur) ? 'current' : '';
+    li.innerHTML = `<span>${p.label}</span><span class="t">第 ${p.t} 分鐘</span>`;
+    ul.appendChild(li);
+  });
+}
+
+function tick(){
+  remaining = Math.max(0, remaining-1);
+  document.getElementById('floatClock').textContent = fmt(remaining);
+  document.getElementById('floatPhase').textContent = currentPhase().label;
+  renderPhaseList();
+  if(remaining<=0){ clearInterval(timerInterval); timerInterval=null; }
+}
+
+function startTimer(){
+  if(timerInterval) return;
+  document.getElementById('floatTimer').style.display='block';
+  document.getElementById('floatTimer').dataset.forced='1';
+  document.getElementById('floatToggle').textContent='暫停';
+  timerInterval = setInterval(tick,1000);
+}
+function pauseTimer(){
+  clearInterval(timerInterval); timerInterval=null;
+  document.getElementById('floatToggle').textContent='開始';
+}
+function resetTimer(){
+  pauseTimer();
+  remaining = totalSeconds;
+  document.getElementById('floatClock').textContent = fmt(remaining);
+  document.getElementById('floatPhase').textContent = currentPhase().label;
+  renderPhaseList();
+}
+
+document.getElementById('timerStart').onclick = startTimer;
+document.getElementById('timerPause').onclick = pauseTimer;
+document.getElementById('timerReset').onclick = resetTimer;
+document.getElementById('floatToggle').onclick = ()=> timerInterval ? pauseTimer() : startTimer();
+document.getElementById('floatHide').onclick = ()=>{
+  document.getElementById('floatTimer').style.display='none';
+  document.getElementById('floatTimer').dataset.forced='0';
+};
+
+/* ---------- 初始化 ---------- */
+renderRoleGrid();
+renderMatrix();
+renderPhaseList();
+document.getElementById('floatClock').textContent = fmt(remaining);
+document.getElementById('floatPhase').textContent = currentPhase().label;
 </script>
 </body>
 </html>
